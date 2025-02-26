@@ -1,0 +1,219 @@
+%% 
+%% Copyright 2007-2020 Elsevier Ltd
+%% 
+%% This file is part of the 'Elsarticle Bundle'.
+%% ---------------------------------------------
+%% 
+%% It may be distributed under the conditions of the LaTeX Project Public
+%% License, either version 1.2 of this license or (at your option) any
+%% later version.  The latest version of this license is in
+%%    http://www.latex-project.org/lppl.txt
+%% and version 1.2 or later is part of all distributions of LaTeX
+%% version 1999/12/01 or later.
+%% 
+%% The list of all files belonging to the 'Elsarticle Bundle' is
+%% given in the file `manifest.txt'.
+%% 
+
+%% Template article for Elsevier's document class `elsarticle'
+%% with numbered style bibliographic references
+%% SP 2008/03/01
+%%
+%% 
+%%
+%% $Id: elsarticle-template-num.tex 190 2020-11-23 11:12:32Z rishi $
+%%
+%%
+%\documentclass[preprint,12pt]{elsarticle}
+\documentclass[final,3p,times,dvipsnames]{elsarticle}
+
+
+%% Use the options 1p,twocolumn; 3p; 3p,twocolumn; 5p; or 5p,twocolumn
+%% for a journal layout:
+%% \documentclass[final,1p,times]{elsarticle}
+%% \documentclass[final,1p,times,twocolumn]{elsarticle}
+%% \documentclass[final,3p,times]{elsarticle}
+%% \documentclass[final,3p,times,twocolumn]{elsarticle}
+%% \documentclass[final,5p,times]{elsarticle}
+%% \documentclass[final,5p,times,twocolumn]{elsarticle}
+
+%% For including figures, graphicx.sty has been loaded in
+%% elsarticle.cls. If you prefer to use the old commands
+%% please give \usepackage{epsfig}
+
+%% The amssymb package provides various useful mathematical symbols
+\usepackage{amssymb}
+%% The amsthm package provides extended theorem environments
+\usepackage{amsthm}
+%% Our added packages
+\usepackage{personal}
+
+\journal{Journal of Computational Physics}
+
+\begin{document}
+
+\begin{frontmatter}
+
+%% Title, authors and addresses
+
+%% use the tnoteref command within \title for footnotes;
+%% use the tnotetext command for theassociated footnote;
+%% use the fnref command within \author or \address for footnotes;
+%% use the fntext command for theassociated footnote;
+%% use the corref command within \author for corresponding author footnotes;
+%% use the cortext command for theassociated footnote;
+%% use the ead command for the email address,
+%% and the form \ead[url] for the home page:
+%% \title{Title\tnoteref{label1}}
+%% \tnotetext[label1]{}
+%% \author{Name\corref{cor1}\fnref{label2}}
+%% \ead{email address}
+%% \ead[url]{home page}
+%% \fntext[label2]{}
+%% \cortext[cor1]{}
+%% \affiliation{organization={},
+%%             addressline={},
+%%             city={},
+%%             postcode={},
+%%             state={},
+%%             country={}}
+%% \fntext[label3]{}
+
+\title{Sampling-based sensitivity indices for stochastic solvers with application to Monte Carlo radiation transport}
+
+%% use optional labels to link authors explicitly to addresses:
+% \author[label1,label2]{}
+% \affiliation[label1]{organization={},
+%             addressline={},
+%             city={},
+%             postcode={},
+%             state={},
+%             country={}}
+       
+\author[1]{Kayla~B. Clements\corref{cor1}}
+%\cormark[1]
+%\fnmark[thanks]
+\ead{clemekay@oregonstate.edu,kbcleme@sandia.gov}
+%\ead[url]{}
+%\credit{test}       
+       
+\author[2]{Gianluca Geraci\corref{cor1}}
+%\cormark[1]
+%\fnmark[thanks]
+\ead{ggeraci@sandia.gov}
+%\ead[url]{}
+%\credit{test}     
+
+\author[2]{Aaron~J. Olson}
+%\cormark[1]
+%\fnmark[thanks]
+\ead{aolson@sandia.gov}
+%\ead[url]{}
+%\credit{test}
+
+\author[1]{Todd~S. Palmer}
+%\cormark[1]
+%\fnmark[thanks]
+\ead{todd.palmer@oregonstate.edu}
+%\ead[url]{}
+%\credit{test} 
+
+\cortext[cor1]{Corresponding authors}
+            
+% Address/affiliation
+\affiliation[1]{organization={Oregon State University},
+            addressline={Address}, 
+            city={Corvallis},
+%           citysep={}, % Uncomment if no comma needed between city and postcode
+            % postcode={XXX}, 
+            state={OR},
+            country={USA}}           
+            
+
+\affiliation[2]{organization={Sandia National Laboratories},
+            addressline={P.O. Box 5800, Mail Stop 1318}, 
+            city={Albuquerque},
+%           citysep={}, % Uncomment if no comma needed between city and postcode
+            postcode={87185-1318}, 
+            state={NM},
+            country={USA}}           
+
+
+\begin{abstract}
+In computational modeling, global sensitivity analysis aims to characterize how input variability affects output variability.
+Sobol' indices, a variance-based tool for global sensitivity analysis, rank parameters in order of importance to model response across the entire combined input parameter space.
+Accurate and efficient methods for computing Sobol' indices have been widely researched for deterministic simulators, in which multiple evaluations of the same input will produce identical outputs.
+Stochastic simulators, on the hand, have an intrinsic randomness and produce different outputs for multiple evaluations of the same input. 
+This introduces additional variability to model output, complicating the use of traditional methods for computing Sobol' indices. 
+In this paper, we focus on computing Sobol' indices that are unbiased by solver noise without needing to over-resolve each evaluation of the stochastic simulator.
+We propose doing so using variance deconvolution, in which we explicitly calculate the variance due to the solver and remove it from the total observed variance.
+The proposed method is applied to two examples: the Ishigami function that is commonly used as a test case for Sobol' indices and a neutron-transport case study.
+The results confirm the convergence of the approach and highlight the approach's utility particularly when the indices are not near-zero and when there is a large amount of solver noise.
+\end{abstract}
+
+
+%%Research highlights
+\begin{highlights}
+\item An approach is developed for global sensitivity analysis using stochastic computational solvers.
+\item Variance deconvolution, in which solver variance is explicitly calculated and removed from the total observed variance, is briefly reviewed.
+\item Variance deconvolution (var-d) is combined with existing methods for Sobol' indices.
+\item Var-d Sobol' indices are shown to converge to the true solution for an analytic test case.
+\item Monte Carlo radiation transport is used for an additional numerical example.
+\end{highlights}
+
+
+\begin{keyword}
+global sensitivity analysis \sep Monte Carlo radiation transport \sep stochastic solvers \sep sobol indices
+\end{keyword}
+
+
+\end{frontmatter}
+
+
+\section{Introduction}
+\label{sec:intro}
+\input{section-intro.tex}
+
+
+\section{Background and theory on ANOVA}
+\label{sec:anova}
+\input{section-anova.tex}
+
+
+\section{Sampling-based estimators for sensitivity indices}
+\label{sec:sampling}
+\input{section-sampling.tex}
+
+
+\section{Introduction to variance deconvolution}
+\label{sec:deconvolution}
+\input{section-stochastic.tex}
+
+
+\section{GSA with variance deconvolution}
+\label{sec:gsa-deconvolution}
+\input{section-stochastic-gsa.tex}
+
+
+\section{Numerical results}
+\label{sec:results}
+\input{section-results.tex}
+
+
+\section{Conclusion}
+\label{sec:conclusion}
+\input{section-conclusions.tex}
+
+
+\section{Mean-squared error from asymptotic limits}
+\label{appx:mse}
+\input{section-appx-mse.tex}
+
+
+\bibliographystyle{elsarticle-num}
+\bibliography{biblio}
+
+
+\end{document}
+\endinput
+

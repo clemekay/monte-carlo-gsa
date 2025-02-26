@@ -1,0 +1,188 @@
+% From beavtex.cls
+\RequirePackage{setspace}
+\RequirePackage{ifthen}
+\RequirePackage[normalem]{ulem}
+\newcommand{\ulinewithbreaks}[1]{\expandafter\uline\expandafter{#1}}
+
+% Dissertation packages
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{bm}
+\usepackage{wrapfig}
+\usepackage{geometry}
+\usepackage{newtxtext}
+\usepackage{newtxmath}
+
+
+% Personal.sty
+
+
+
+\newcommand{\eg}{\textit{e.g.},~}
+\newcommand{\ie}{\textit{i.e.},~}
+
+% Existing definitions
+\newcommand{\defin}{\overset{\operatorname{def}}{=}}
+\newcommand{\Nxi}{ {N_\xi} }
+\newcommand{\Neta}{ {N_\eta} }
+\newcommand{\Qpoll}{\tilde{Q}_{\Neta}}
+\renewcommand{\tilde}{\widetilde}
+
+\newcommand{\Sigsqeta}{\sigma^2_\eta}
+\newcommand{\hatSigsqeta}{\hat{\sigma}^2_\eta}
+\newcommand{\Var}[1]{\mathbb{V}ar\left[#1\right]}
+\newcommand{\EE}[1]{\mathbb{E}\left[#1\right]}
+\newcommand{\EExi}[1]{\mathbb{E}_\xi\left[#1\right]}
+\newcommand{\EExini}[1]{\mathbb{E}_{\xini} \bigl[ #1 \bigr]}
+\newcommand{\Vxi}[1]{\mathbb{V}ar_{\xi}\left[#1\right]}
+\newcommand{\EEeta}[1]{\mathbb{E}_\eta\left[#1\right]}
+\newcommand{\Veta}[1]{\mathbb{V}ar_{\eta}\left[#1\right]}
+\newcommand{\Stsq}{\tilde{S^2}}
+\newcommand{\SigSqRT}{\sigma^2_{RT,\Neta}}
+\newcommand{\muRT}{\hat{\mu}_{\SigSqRT}}
+
+
+% Summations
+\newcommand{\sumeta}{\sum_{j=1}^{\Neta}}
+\newcommand{\etaj}{\eta^{(j)}}
+\newcommand{\sumv}{\sum_{v=1}^{\Nxi}}
+\newcommand{\xiv}{\xi^{(v)}}
+\newcommand{\fvj}{f(\xiv,\etaj)}
+
+\newcommand{\Q}{Q\left( \bxi \right)}
+\newcommand{\bxi}{\bm{\xi}}
+\newcommand{\xis}{\xi_1,\ldots,\xi_k}
+\newcommand{\xii}{\xi_{i}}
+\newcommand{\xij}{\xi_{j}}
+\renewcommand{\ni}{{\sim i}}
+\newcommand{\xini}{\xi_{\sim i}}
+
+
+\newcommand{\VE}[2][]{\mathbb{V}ar\Bigl[ \mathbb{E}\bigl[#2\bigr] \, {#1} \Bigr]}
+\newcommand{\EV}[2][]{\mathbb{E}\Bigl[ \mathbb{V}ar\bigl[#2\bigr] \, {#1} \Bigr]}
+\newcommand{\VEi}[1]{\mathbb{V}ar_{\xii} \Bigl[ \mathbb{E}_{\xini}\bigl[ #1 \bigr] \Bigr]}
+\newcommand{\VEni}[1]{\mathbb{V}ar_{\xini} \Bigl[ \mathbb{E}_{\xii}\bigl[ #1 \bigr] \Bigr]}
+\newcommand{\EVni}[1]{\mathbb{E}_{\xini} \Bigl[ \mathbb{V}ar_{\xii} \bigl[ #1 \bigr] \Bigr]}
+
+
+% Continuous with Q
+\renewcommand{\S}[1]{\mathbb{S}_{#1}}
+\newcommand{\T}[1]{\mathbb{T}_{#1}}
+\newcommand{\V}[1]{\mathbb{V}_{#1}}
+
+% Continuous with Qpoll
+\newcommand{\Spoll}[1]{\S{#1, \Qpoll}}
+\newcommand{\Tpoll}[1]{\T{#1, \Qpoll}}
+\newcommand{\Vpoll}[1]{\V{#1, \Qpoll}}
+
+% Saltelli estimators with Qpoll
+\newcommand{\pollSsalt}[1]{\hat{\mathbb{S}}_{#1, \Qpoll}}
+\newcommand{\pollTsalt}[1]{\hat{\mathbb{T}}_{#1, \Qpoll}}
+\newcommand{\pollVsalt}[1]{\hat{\mathbb{V}}_{#1, \Qpoll}}
+\newcommand{\varTotal}[1]{\tilde{S}^2_{\left( #1 \right)}}
+
+% Sample means
+\newcommand{\meanQ}[1]{\left< Q \right>_{\left(#1 \right)}}
+\newcommand{\meanQpoll}[1]{\left< \tilde{Q}_{\Neta} \right>_{\left(#1 \right)}}
+\newcommand{\meanHatsigsqeta}[1]{\left< \hatSigsqeta \right>_{\left(#1 \right)}}
+\newcommand{\Qhpoll}{\bigl< \Qpoll \bigr>}
+
+% Saltelli estimators with Q
+\newcommand{\Ssalt}[1]{\hat{\mathbb{S}}_{#1}}
+\newcommand{\Tsalt}[1]{\hat{\mathbb{T}}_{#1}}
+
+% Sampling estimators with var deconv correction
+\newcommand{\varParam}[1]{S^2_{\left( #1 \right)}}
+\newcommand{\unpollSsalt}[1]{\hat{\mathbb{S}}_{#1, VD}}
+\newcommand{\unpollTsalt}[1]{\hat{\mathbb{T}}_{#1, VD}}
+
+% Misc.
+\renewcommand{\k}{k_{\text{eff}}}
+\newcommand{\remainingEE}[1]{\EE{ \frac{1}{\Neta} \mathbb{E} \left( \Sigsqeta \mid  #1 \right)}}
+
+
+
+
+% Paper 1
+\newcommand{\Qhxi}{\hat{Q}_\xi}
+\newcommand{\sumxi}{\sum_{i=1}^{\Nxi}}
+\newcommand{\Sighxi}{\hat{\sigma}^2_\xi}
+\newcommand{\fij}{f(\xii,\etaj)}
+\usepackage{amsthm}
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newcommand{\SigSqeta}{\sigma^2_\eta}
+\newcommand{\hatSigSqeta}{\hat{\sigma}^2_\eta}
+\newcommand{\Ssq}{S^2}
+\newcommand{\Cov}[2]{\mathbb{C}ov\left[#1,#2\right]}
+\newcommand{\f}{f(\xi,\eta)}
+\newcommand{\Stm}{\Sigma_{t,m}^{0}}
+\newcommand{\Std}{\Sigma_{t,m}^{\Delta}}
+\newcommand{\ft}{\tilde{f}}
+\newcommand{\StmD}{\Stm \Delta x}
+\newcommand{\StdD}{\Std \Delta x}
+\usepackage{multirow}
+\usepackage{placeins}
+\usepackage{url}
+\newcommand{\Exiq}{\EExi{Q}}
+\newcommand{\sumz}[1][x]{%
+    \IfEqCase{#1}{%
+    {2}{\left( \sum_{j=1}^{\Neta} Z_j \right)^2}%
+    {3}{\left( \sum_{j=1}^{\Neta} Z_j \right)^3}%
+    {4}{\left( \sum_{j=1}^{\Neta} Z_j \right)^4}}%
+    [{\sum_{j=1}^{\Neta} Z_j}]%
+}
+
+% Paper 2
+% Sobol' EE and Var
+\newcommand{\EExii}[1]{\mathbb{E}_{\xi_i} \bigl[ #1 \bigr]}
+\newcommand{\inlineVE}[1]{\mathbb{V}ar\bigl[ \mathbb{E}\bigl(#1\bigr) \bigr]}
+\newcommand{\inlineEV}[1]{\mathbb{E}\bigl[ \mathbb{V}ar\bigl(#1\bigr) \bigr]}
+\newcommand{\EExinij}[1]{\mathbb{E}_{\xini,\xi_{\sim j}} \bigl[ #1 \bigr]}
+\newcommand{\brac}[1]{\bigl[ #1 \bigr]}
+\newcommand{\Brac}[1]{\Bigl[ #1 \Bigr]}
+\newcommand{\Vsub}[1]{\mathbb{V}ar_{#1}}
+\newcommand{\tempsymbol}{R}
+\newcommand{\E}[1]{\mathbb{E}_{#1}}
+\usepackage{hyperref}
+\newcommand{\C}{\mathcal{C}}
+
+
+% P3
+\renewcommand{\k}{k_{\text{eff}}}
+
+
+% P2
+\newcommand{\vip}{\tilde{V_i}}
+\newcommand{\vih}{\hat{V_i}}
+\newcommand{\mse}[1]{MSE \left[ #1 \right]}
+\newcommand{\bias}[1]{\mathbb{B}ias^2 \left[ #1 \right]}
+\newcommand{\avgsig}[1]{\overline{\sigma^2_{\eta}}_{({#1})}}
+\newcommand{\nemo}{\left(\Neta-1\right)}
+\newcommand{\nemh}{\left(\Neta-3\right)}
+\newcommand{\cond}{\xrightarrow{d}}
+\newcommand{\conp}{\xrightarrow{p}}
+\newcommand{\conas}{\xrightarrow{a.s.}}
+\newcommand{\iid}{\overset{\operatorname{i.i.d}}{\sim}}
+\newcommand{\nablax}{\nabla_{\mu_X}}
+\newcommand{\nablay}{\nabla_{\mu_Y}}
+\newcommand{\xavg}{\overline{X}_{\Nxi}}
+\newcommand{\yavg}{\overline{Y}_{\Nxi}}
+\renewcommand{\liminf}[1]{\lim_{#1 \rightarrow \infty}}
+\newcommand{\pollE}[1]{\mathbb{E}_{#1, \Qpoll}}
+
+\newcommand{\genstsq}{\tilde{S}^2}
+\newcommand{\genmeanhatsigsqeta}{\left< \hatSigsqeta \right>}
+\newcommand{\Vxisq}[1]{\mathbb{V}ar^2_{\xi}\left[#1\right]}
+\newcommand{\EExisq}[1]{\mathbb{E}_\xi ^2 \left[#1\right]}
+%\newcommand{\Esq}[1]{\mathbb{E}^2\left[#1\right]}
+\newcommand{\Vsq}[1]{\mathbb{V}ar^2\left[#1\right]}
+
+\newcommand{\pollEsalt}[1]{\hat{\mathbb{E}}_{#1, \Qpoll}^S}

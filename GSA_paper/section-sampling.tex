@@ -1,0 +1,48 @@
+The development of efficient numerical algorithms for computing the full suite of first- and total-order SIs has been an ongoing area of research since MC estimators for $\S{i}$ and $\T{i}$ were first proposed~\cite{sobol-1993, homma-saltelli-1996, saltelli-2002}, and a number of sampling schemes and estimators exist to do so.
+The various methods follow the same general structure: sample the parameter space, evaluate the computational model at the sampled parameters, then approximate $\S{i}$ and $\T{i}$ using MC estimators. 
+We outline the general algorithm, the Saltelli approach~\cite{saltelli-etal-2010, saltelli-2002}, here, assuming $k$ uncertain parameters:
+\begin{enumerate}
+    \item Define two $(\Nxi,k)$ matrices, $\bm{A}$ and $\bm{B}$, which contain independent input samples. 
+    \begin{equation}\label{m2eq:Amatrix}
+        \bm{A} = \begin{bmatrix}
+        \xi_1^{(1)} & \cdots & \xi_i^{(1)}   & \cdots & \xi_k^{(1)}  \\
+        \vdots      &        & \ddots        &        & \vdots       \\
+        \xi_1^{(N)} & \cdots & \xi_i^{(\Nxi)}   & \cdots & \xi_k^{(\Nxi)}  \\
+        \end{bmatrix} 
+        , \quad \quad
+        \bm{B} = \begin{bmatrix}
+        \xi_{k+1}^{(1)} & \cdots & \xi_{k+i}^{(1)}   & \cdots & \xi_{2k}^{(1)}   \\
+        \vdots          &        & \ddots            &        & \vdots           \\
+        \xi_{k+1}^{(\Nxi)} & \cdots & \xi_{k+i}^{(\Nxi)}   & \cdots & \xi_{2k}^{(\Nxi)}   \\
+        \end{bmatrix} .
+    \end{equation}
+    \item For each $i$-th parameter, define matrix $\bm{A_B^{(i)}}$ ($\bm{B_A^{(i)}}$), which is a copy of $\bm{A}$ ($\bm{B}$) except for the $i$-th column, which comes from $\bm{B}$ ($\bm{A}$). 
+    \begin{equation}\label{m2eq:ABmatrix}
+        \bm{A_B^{(i)}} = \begin{bmatrix}
+        \xi_1^{(1)} & \cdots & \xi_{k+i}^{(1)}   & \cdots & \xi_k^{(1)}  \\
+        \vdots      &        & \ddots            &        & \vdots       \\
+        \xi_1^{(\Nxi)} & \cdots & \xi_{k+i}^{(\Nxi)}   & \cdots & \xi_k^{(\Nxi)}  \\
+        \end{bmatrix} .
+    \end{equation}
+    \item Compute model output for $\bm{A}$, $\bm{B}$, and all $\bm{A_B^{(i)}}$ ($\bm{B_A^{(i)}}$) to obtain vectors of model output $Q(\bm{A})$, $Q(\bm{B})$, $Q(\bm{A_B^{(i)}})$, and/or $Q(\bm{B_A^{(i)}})$ of dimension $(\Nxi,1)$. 
+    \item Approximate the full set of $\S{i}$ and $\T{i}$ using $Q(\bm{A})$, $Q(\bm{B})$, $Q(\bm{A_B^{(i)}})$, and/or $Q(\bm{B_A^{(i)}})$.
+\end{enumerate}
+Specific methods for computing SIs are defined by two components~\cite{piano-etal-2021}: 1) the sampling scheme used to populate matrices $\bm{A}$ and $\bm{B}$ from the parameter space, such as purely random MC or a quasi-random scheme like the Sobol' sequence~\cite{sobol-1967, sobol-1976} or Latin hypercube~\cite{mckay-etal-1979}; and 2) the MC estimators used to approximate Eqs.~\eqref{m2eq:si} and~\eqref{m2eq:ti}. 
+Though some estimators require a specific sampling scheme, quasi-random sampling as a default choice has been shown to be the best for a function of unknown behavior~\cite{kucherenko-etal-2015, sensobol-2022}.
+This is by no means intended as an exhaustive review of estimator design; a few notable works include~\cite{saltelli-etal-2008, sobol-1993, homma-saltelli-1996, saltelli-2002, saltelli-etal-2010, glen-isaacs-2012, janon-etal-2014, lilburne-tarantola-2009, mara-joseph-2008, mckay-1995, owen-2013, plischke-etal-2013, ratto-etal-2007, sobol-etal-2007, jansen-1999, azzini-etal-2020b, sobol-2001, monod-etal-2006, razavi-gupta-2016a, razavi-gupta-2016b}. 
+For a review, see, \eg,~\cite{puy-etal-2022, saltelli-etal-2010}.
+
+For simplicity when examining the effects of variance deconvolution, we limit discussion to using purely random MC sampling. 
+With purely random MC sampling, there is no difference between using triplet $\left( \bm{A}, \bm{B}, \bm{A_B^{(i)}} \right)$ or triplet $\left( \bm{B}, \bm{A}, \bm{B_A^{(i)}} \right)$ in the estimators, as long as they are used consistently within the estimator~\cite{saltelli-etal-2010}.
+We also limit discussion to one first- and one total-order estimator, shown in Section~\ref{subsec:saltelli-est}. 
+Later, we discuss how the presented variance deconvolution analysis can be extended to other SI estimators. 
+
+\subsection{Sampling estimators for \texorpdfstring{$\S{i}$}{Si} and \texorpdfstring{$\T{i}$}{Ti}} \label{subsec:saltelli-est}
+As recommended by Saltelli et al. (2012)~\cite{saltelli-etal-2012}, we use the 
+the sampling estimator for $\S{i}$ from Sobol' et al. (2007)~\cite{sobol-etal-2007} and for $\T{i}$ from Jansen et al. (1999)~\cite{jansen-1999}. 
+Letting $Q(\bm{A})_v$ indicates the $v$-th element of the vector $Q(\bm{A})$, \ie one function evaluation of $Q$, 
+\begin{align} \label{m2eq:saltelli-si}
+    \S{i} &\approx \frac{\frac{1}{\Nxi} \sumv Q(\bm{B})_v \bigl[ Q(\bm{A_B^{(i)}})_v - Q(\bm{A})_v \bigr]}{\frac{1}{2\Nxi} \sumv \left( Q(\bm{A})_v - Q(\bm{B})_v \right)^2} \defin \Ssalt{i}, \\ \label{m2eq:saltelli-ti}
+    \T{i} &\approx \frac{ \frac{1}{2\Nxi} \bigl[ Q(\bm{B_A^{(i)}})_v - Q(\bm{B})_v \bigr]^2}{\frac{1}{2\Nxi} \sumv \left( Q(\bm{A})_v - Q(\bm{B})_v \right)^2} \defin \Tsalt{i} .
+\end{align}
+In the following, we analyze how to compute the statistical quantities introduced above when the underlying QoI is computed using a stochastic solver.

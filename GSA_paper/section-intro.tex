@@ -1,0 +1,47 @@
+In computational modeling, uncertainty and sensitivity analyses are essential to quantify and analyze the reliability, accuracy, and robustness of a model and its outputs~\cite{NAS-2012, dowding-2009, helton-2008}. 
+Uncertainty analysis focuses on quantifying uncertainty in model output by calculating statistics of the quantity of interest such as mean and variance~\cite{saltelli-etal-2008, ghanem-uq-handbook}; it is also referred to as uncertainty quantification (UQ). 
+Sensitivity analysis (SA), a related practice, is the study of how uncertainty in model output can be ascribed to different sources of input uncertainty~\cite{saltelli-sobol-1995}. 
+% Sensitivity analysis can be categorized as \emph{global} or \emph{local}, which refer to the scope of the SA itself, not to whether the output is a system-wide quantity.
+\emph{Local} SA characterizes a system's response to small perturbations around some nominal parameter value by computing partial derivatives of the model response at that value~\cite{ionescu-cacuci-2004, cacuci-ionescu-2004}. 
+On the other hand, \textit{global} sensitivity analysis (GSA) aims to rank parameters in order of importance to model response across the entire input parameter space. % and to determine all of a system's critical points. 
+There are many statistics that can be used as measures of importance for parameter ranking; what statistic is used depends on what question the practitioner hopes to answer, defined in~\cite{saltelli-etal-2008} as the SA \textit{setting}. 
+For an exhaustive introduction to GSA in the scientific computing context, see Saltelli's book~\cite{saltelli-etal-2008}. 
+
+In this paper we focus on variance-based GSA, in which sensitivity indices are used to determine which factor or set of factors has the largest impact on output variance. 
+Sensitivity indices (SIs), also commonly referred to as Sobol' indices, arise from the ANOVA (ANalysis Of VAriance) decomposition of the output~\cite{sobol-1993, homma-saltelli-1996}. 
+Many methods have been introduced to compute SIs, either by approximating the ANOVA decomposition via meta-modeling (surrogate modeling) or directly by using a sampling-based approach.
+In the former, the ANOVA decomposition of the output is approximated via a surrogate model, such as the polynomial chaos expansion~\cite{crestaux-lemaitre-2009}. 
+Meta-modeling approaches typically require fewer model evaluations than sampling-based approaches and are therefore attractive for computational models with a large single-simulation time; however, they can be susceptible to any lack of smoothness or regularity of the underlying function~\cite{saltelli-etal-2008, crestaux-lemaitre-2009} and suffer from the `curse of dimensionality'~\cite{kontolati-etal-2022, crestaux-lemaitre-2009}. 
+In the latter, indices are computed directly using sampling-based estimators in combination with sampling schemes such as Monte Carlo (MC), quasi-MC, or Latin Hypercube~\cite{sobol-1993, homma-saltelli-1996, kucherenko-etal-2015}.
+Sampling-based methods are useful because they do not make any \textit{a priori} assumptions about the linearity, smoothness, or regularity of the model~\cite{archer-etal-1997, cacuci-ionescu-2004}. 
+They do assume that the input factors are mutually independent~\cite{saltelli-2002}, though treatments exist for the more complex case of correlated input factors~\cite{saltelli-etal-2008}. 
+Their primary drawback is the high computational cost associated with the multiple code evaluations needed to compute a full suite of sensitivity indices, and efficient numerical algorithms for computing SIs is an area of ongoing research~\cite{puy-etal-2022}.
+
+The vast majority of the large body of work on GSA~\cite{saltelli-etal-2008, helton-2008, ionescu-cacuci-2004, cacuci-ionescu-2004} has been designed with deterministic solvers in mind, inherently assuming that output variability results exclusively from propagated input variability. 
+Additional complication arises when performing sensitivity analysis in the context of stochastic solvers, which are used in a variety of disciplines such as compute networks~\cite{crussell-etal-2019, geraci-etal-2021}, turbulent flows~\cite{lattanzi-subramaniam-2023}, financial modeling~\cite{korn-etal-2010}, disease prediction~\cite{tripathy-etal-2020}, and radiation transport~\cite{lewis-miller-1993}. 
+Multiple evaluations of a stochastic solver using the same input will produce different outputs, akin to different realizations of a random variable whose probability distribution is unknown~\cite{larsen-marx-2012}.
+In computer codes, stochastic solvers simulate randomness using (pseudo-)random number generators, where the initial seed could be chosen by the analyst but the random number stream cannot~\cite{owen-2013-textbook}.
+When the inputs of a stochastic simulator have some associated uncertainty, as is the case for GSA, the total observed output variance is a combination of the variability of the solver itself (referred to from here as solver variance) and the variability of the inputs (referred to from here as parametric variance) ~\cite{rochman-etal-2014, clements-etal-2024}. 
+A standard approach to approximate the parametric variance using a stochastic solver is to increase the number of solver realizations, knowing that the total variance will approach the parametric variance in the limit of an infinite number of solver samples~\cite{rainforth-etal-2018}.
+However, doing this for each of the multiple code evaluations needed to calculate sampling-based SIs exacerbates the already-high computational cost.
+
+Over the past decade or so, there have been a number of methods introduced to extend Sobol' indices to stochastic simulators, which are reviewed thoroughly in~\cite{zhu-sudret-2021}.
+The macroparameter method~\cite{iooss-ribatet-2009} considers the solver's random seed to be an additional input parameter and computes Sobol' indices as if there are $(k+1)$ parameters, explicitly treating the covariances~\cite{daviega-etal-2009} of the sets of $k$ now-correlated inputs (similar methods exist for sampling-based UQ with stochastic solvers, \eg, Total Monte Carlo~\cite{koning-rochman-2008, koning-rochman-2012}). 
+Other methods have defined the Sobol' indices themselves as random variables by treating them as functions of the solver stochasticity, then analyzed the statistical properties of the SIs~\cite{hart-etal-2017, jimenez-etal-2017}. 
+Many of the proposed methods mitigate the expense of resolving the stochastic solver by instead emulating the stochastic solver with a surrogate model, then calculating Sobol' indices using the constructed surrogate at a reduced computational cost~\cite{zhu-sudret-2021}.
+One such class of methods uses joint meta-models to deterministically represent the statistics of the stochastic outputs such as mean and variance~\cite{iooss-ribatet-2009, marrel-etal-2012}, alpha-quantile~\cite{browne-etal-2016}, and differential entropy~\cite{azzi-etal-2020}.
+Most recently, Zhu and Sudret~\cite{zhu-sudret-2021} presented a framework for creating a surrogate that captures entire response distribution of the stochastic solver by using their generalized lambda model.
+
+In recent publications~\cite{olson-2019}, as an alternative to the standard approach, we proposed a novel method for UQ with stochastic solvers called \textit{variance deconvolution} to compute parametric variance without a surrogate by explicitly quantifying and removing the solver variance from the total observed variance.
+In Clements, \textit{et al.}~\cite{clements-etal-2024}, we rigorously showed that variance deconvolution is accurate and far more cost effective than the standard approach for computing parametric variance. 
+In previous work, we integrated variance deconvolution in sampling-based GSA for stochastic media~\cite{olson-2019} and surrogate~\cite{geraci-olson-2021, geraci-etal-2023} approaches. 
+The goal of this paper is to present a clear framework to compute Sobol' indices using stochastic solvers without stochastic emulators or the expensive standard approach by using variance deconvolution. 
+We examine the biases introduced when using stochastic solvers to compute parametric SIs, discuss how and when to use variance deconvolution, and analyze the impact of combining it with existing sampling-based methods for SIs.
+
+The remainder of the paper is structured as follows.
+In Section~\ref{sec:anova}, we review ANOVA decomposition and Sobol' indices.
+In Section~\ref{sec:sampling}, we review existing sampling-based estimators for sensitivity indices.
+In Section~\ref{sec:deconvolution}, we summarize variance deconvolution as presented in~\cite{clements-etal-2024}. 
+Then, in Section~\ref{sec:gsa-deconvolution}, we discuss the impact of computing SIs with stochastic solvers and how using variance deconvolution compares to a standard approach. 
+In Section~\ref{sec:results}, we show variance deconvolution's performance and compare it to that of the standard approach for two examples, the analytical Ishigami function and a neutral-particle radiation transport example problem with energy-dependence and fission.
+Finally, we summarize the main findings of the paper and discuss possible future applications in Section~\ref{sec:conclusion}.

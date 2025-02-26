@@ -1,0 +1,53 @@
+In this section, we give a brief review of Sobol's variance decomposition~\cite{sobol-1993} and how it is used to define variance-based sensitivity indices~\cite{sobol-1993, homma-saltelli-1996}.
+
+\subsection{Sobol' decomposition}
+Consider a generic scalar quantity of interest (QoI) $Q = \Q, \bxi = \left( \xis \right) \in \Xi \subset \mathbb{R}^k$, where $\xis$ are independent random variables with arbitrary joint distribution function $p(\bxi)$. 
+The mean and variance of $Q$ can be computed as
+\begin{equation}
+    \EExi{Q} = \int_{\Xi} \Q p(\bxi) d\bxi \qquad \text{and} \qquad \Vxi{Q} = \int_{\Xi} \Biggl( \Q - \EExi{Q} \Biggr)^2 p(\bxi) d\bxi ,
+\end{equation}
+respectively, where we have used a subscript to indicate the expectation and variance over $\xi$. 
+Sobol' considered~\cite{sobol-1993} an expansion of $Q$ into $2^k$ orthogonal terms of increasing dimension, 
+\begin{equation} \label{m2eq:q_decomp}
+    Q = Q_0 + \sum_i Q_i + \sum_i \sum_{j > i} Q_{ij} + \cdots + Q_{12 \ldots k} ,
+\end{equation}
+in which each term is a function only of the factors in its subscript, \ie, $Q_i = Q_i(\xii)$, $Q_{ij} = Q_{ij}(\xii, \xij)$.
+In particular, Sobol' considered the case in which each term could be defined recursively using the conditional expectations of $Q$,
+\begin{align}
+    Q_0 &= \EExi{Q} \\
+    Q_i &= \EExini{Q \mid \xii} - \EExi{Q} \\
+    Q_{ij} &= \EExinij{Q \mid \xii, \xij} - Q_i - Q_j - \EExi{Q} ,
+\end{align}
+where $\EExini{Q \mid \xii}$ indicates the expected value of $Q$ conditional on some fixed value $\xii$ and $\EExinij{Q \mid \xii, \xij}$ indicates the expected value of $Q$ conditional on the pair of values $(\xii, \xij)$. 
+The variances of the terms in Eq.~\eqref{m2eq:q_decomp} give rise to the measures of importance being sought. 
+The conditional variance $\Vxi{Q_i} = \VEi{Q \mid \xii} \defin \V{i}$ is called the first-order effect of $\xii$ on $Q$.
+The second-order effect $\Vxi{Q_{ij}} = \inlineVE{Q \mid \xii, \xij} - \V{i} - \V{j} \defin \V{ij}$ is the difference between the combined effect of the pair $(\xii,\xij)$ and both of their individual effects; it captures the effect solely of their interaction with one another.
+Higher-order effects can be defined analogously to quantify the effects of higher-order interactions, up to the final term $\V{12 \ldots k}$.
+Sobol's variance decomposition expands $\Vxi{Q}$ into variance terms of increasing order,
+\begin{equation} \label{m2eq:v_decomp}
+    \Vxi{Q} = \sum_i \V{i} + \sum_i \sum_{j > i} \V{ij} + \cdots + \V{12 \ldots k} .
+\end{equation}
+Sensitivity indices (SIs), also referred to as Sobol' indices, result directly from dividing Eq.~\eqref{m2eq:v_decomp} by the unconditional variance $\Var{Q}$ and provide measures of importance used to, e.g., rank the parameters in GSA; this is discussed in the next section.
+
+\subsection{Sensitivity indices}
+A sensitivity index is the ratio of the conditional variance of a parameter or set of parameters to the unconditional variance, which can be used as a measure of importance of the parameter(s) to the QoI~\cite{sobol-1993, homma-saltelli-1996, hora-iman-1986, ishigami-homma-1990, iman-hora-1990}.
+The first-order sensitivity index of parameter $\xii$ is the ratio of its first-order effect to the unconditional variance,
+\begin{equation} \label{m2eq:si}
+    \S{i} = \frac{\VEi{Q \mid \xii}}{\Vxi{Q}} .
+\end{equation}
+The $k$ first-order SIs represent the main effect contributions of each input factor to the variance of the output.
+All first-order SIs are between 0 and 1 and $\sum_{i=1}^k \S{i} \leq 1$, with equality for purely additive models.
+Analogously to the higher-order variance terms in Eq.~\eqref{m2eq:v_decomp}, higher-order SIs represent the contribution only of the interactions amongst a set of variables. 
+Dividing Eq.~\eqref{m2eq:v_decomp} by $\Var{Q}$ results in the summation of all of the first- and higher-order SIs to 1:
+\begin{equation} \label{m2eq:s_decomp}
+    \sum_i \S{i} + \sum_i \sum_{j > i} \S{ij} + \cdots + \S{12 \ldots k} = 1.
+\end{equation}
+In addition to its first-order SI, a parameter can be described by its total-order SI $\T{I}$, which accounts for its total contribution to the output variance by combining its first-order effect and all of its higher-order interaction effects.
+For example, in a model with three parameters, the total effect of $\xi_1$ would be the sum of all of the terms in Eq.~\eqref{m2eq:s_decomp} that contain a 1: $\T{1} = \S{1} + \S{12} + \S{13} + \S{123}$. 
+The total-order SI of $\xii$ can also be expressed~\cite{homma-saltelli-1996, saltelli-2002} by conditioning on the set $\bxi_\ni$, which contains all factors except $\xii$, as
+\begin{equation} \label{m2eq:ti}
+    \T{i} = \frac{\EVni{Q \mid \bxi_\ni}}{\Vxi{Q}} = 1 - \frac{\VEni{Q \mid \bxi_\ni}}{\Vxi{Q}} .
+\end{equation}
+Since $\VEi{Q \mid \bxi_{\sim i}}$ can be understood as the main effect of everything that is not $\xii$, the remaining $\EVni{Q \mid \bxi_{\sim i}} = \Var{Q} - \VEni{Q \mid \bxi_{\sim i}} \defin \E{\ni}$ is the effect of any terms that do contain $\xii$. 
+Rather than compute all higher-order terms, it is customary to compute the set of first- and total-order indices for a good description of the importance of parameters and their interactions at a reasonable cost~\cite{saltelli-etal-2008}.
+In the next section, we summarize sampling-based methods for estimating the full set of first- and total-order SIs. 

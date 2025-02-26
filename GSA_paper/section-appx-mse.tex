@@ -1,0 +1,126 @@
+The law of large numbers and central limit theorem ensure that the estimators $\unpollSsalt{i}$ and $\unpollTsalt{i}$ converge to $\S{i}$ and $\T{i}$ almost surely, \ie $\lim_{\Nxi \rightarrow \infty} \unpollSsalt{i} = \S{i}$ and $\lim_{\Nxi \rightarrow \infty} \unpollTsalt{i} = \T{i}$.
+
+The estimators $\pollSsalt{i}$ and $\pollTsalt{i}$ converge almost surely to $\Spoll{i}$ and $\Tpoll{i}$ in the limit $\Nxi \rightarrow \infty$, and to $\S{i}$ and $\T{i}$ in the stricter limit $\left( \Nxi, \Neta\right) \rightarrow \infty$.
+
+We assume that the sample estimator $\unpollSsalt{i}$ uses sample sizes $\Nxi$ and $\Neta$ for the sensitivity sampling and stochastic solver samples per realization, respectively.
+In the following, we follow the steps of Janon et al. (2014)~\cite{janon-etal-2014} and Azzini et al. (2021)~\cite{azzini-etal-2021} to establish that the asymptotic normality of this estimator is,
+\begin{equation}
+    \lim_{\Nxi \rightarrow \infty} \sqrt{\Nxi} \left( \unpollSsalt{i} - \S{i} \right) \sim \mathcal{N} \Biggl( 0, \Var{\alpha - \S{i} (\beta - \gamma )} \Biggr) .
+\end{equation}
+
+\subsection{Proof: First-order Estimators} \label{sec:proof-first-order}
+We define random vector $X$ with mean $\mu_X$, variance $\Sigma_X$, and sample mean $\xavg = \Nxi^{-1} \sumv X_v$, where the statistics of the samples $X_v$ do not depend on $v$:
+\begin{align} \label{m4eq:xmatrix}
+    X &= \begin{bmatrix} \Qpoll(\bm{B}) \left[ \Qpoll(\bm{A_B^{(i)}}) - \Qpoll(\bm{A}) \right] \\
+                        \frac{1}{2} \left( \Qpoll(\bm{A}) - \Qpoll(\bm{B}) \right)^2 \\
+                        \frac{1}{2\Neta} \left( \hatSigsqeta(A) + \hatSigsqeta(B) \right)
+        \end{bmatrix}
+        = \begin{bmatrix} \alpha \\ \beta \\ \gamma \end{bmatrix}, \\
+    \mu_X &= \begin{bmatrix} \VE{Q\mid\xi_i} \\ \Var{\Qpoll} \\ \EE{\Sigsqeta}/\Neta \end{bmatrix} 
+        = \begin{bmatrix} \mu_\alpha \\ \mu_\beta \\ \mu_\gamma \end{bmatrix}, \\
+    \Sigma_X &= \begin{bmatrix}
+        \Var{\alpha} & \Cov{\alpha}{\beta} & \Cov{\alpha}{\gamma} \\ 
+        \Cov{\alpha}{\beta} & \Var{\beta} & \Cov{\beta}{\gamma} \\
+        \Cov{\alpha}{\gamma} & \Cov{\beta}{\gamma} & \Var{\gamma}
+    \end{bmatrix} , \\
+    X_v &= \begin{bmatrix} \Qpoll(\bm{B})_v \left[ \Qpoll(\bm{A_B^{(i)}})_v - \Qpoll(\bm{A})_v \right] \\
+                        \frac{1}{2} \left( \Qpoll(\bm{A})_v - \Qpoll(\bm{B})_v \right)^2 \\
+                        \frac{1}{2\Neta} \left( \hatSigsqeta(A)_v + \hatSigsqeta(B)_v \right)
+        \end{bmatrix} \iid F(X) .
+\end{align}
+
+From the central limit theorem (CLT), we have $\sqrt{\Nxi} \left( \xavg - \mu_X \right) \cond \mathcal{N}_k \left(0, \Sigma_X \right)$. 
+
+\noindent
+We define a function $g(a,b,c)$ and its gradient $\nabla g$,
+\begin{equation}
+    g (a,b,c) = \frac{a}{b - c} , \qquad
+    \nabla g (a,b,c) = \left[ \frac{1}{b-c}, \, \frac{-a}{(b-c)^2}, \, \frac{a}{(b-c)^2} \right] ,
+\end{equation}
+such that we can write 
+\begin{gather}
+    g \left( \mu_X \right) = \frac{\VE{Q\mid\xi_i}}{\Var{\Qpoll} - \frac{1}{\Neta}\EExi{\Sigsqeta}} = \frac{\VE{Q\mid\xii}}{\Vxi{Q}} = \S{i} ,\\
+    g \left( \xavg \right) = \unpollSsalt{i} .
+\end{gather}
+From the so-called Delta method~\cite{vandervaart-2000}, given function $g$ with gradient $\nabla g$ such that $\nabla g (\mu_X) \defin \nabla_{\mu_X} \neq 0$, 
+\begin{equation*}
+    \sqrt{\Nxi} \left( g(\xavg) - g(\mu_X) \right) \cond \mathcal{N} \left( 0, \nabla_{\mu_X} \, \Sigma_X \, \nabla_{\mu_X}^T \right) .
+\end{equation*}
+%
+Therefore, we find that the estimator $\unpollSsalt{i}$ is unbiased regardless of stochastic solver sampling size $\Neta$, with variance that depends on both $\Nxi$ and $\Neta$,
+\begin{equation}
+    \Var{\unpollSsalt{i}} = \frac{\Var{\alpha - \S{i} \left( \beta - \gamma \right)}}{\Vxisq{Q}} .
+\end{equation}
+Plugging in $\alpha$, $\beta$, and $\gamma$ defined in Eq.~\eqref{m4eq:xmatrix} leads to the result in Eq.~\ref{m4eq:var-s-vd}.
+
+Analysis of standard estimator $\pollSsalt{i}$ follows by defining vector $Y = \left[ \alpha, \beta, 0 \right]^T$ such that $g(\mu_Y) = \Spoll{i}$ and $g(\yavg) = \pollSsalt{i}$. 
+Then,
+\begin{equation*}
+    \sqrt{\Nxi} \left( g(\yavg) - g(\mu_Y) \right) \cond \mathcal{N} \left( 0, \nabla_{\mu_Y} \, \Sigma_X \, \nabla_{\mu_Y}^T \right) .
+\end{equation*}
+%
+Therefore, we find that $\pollSsalt{i}$ is a biased estimator of $\S{i}$, where the magnitude of the bias depends on $\Neta$, with variance that depends on both $\Nxi$ and $\Neta$,
+\begin{align}
+    \bias{\pollSsalt{i}, \S{i}} &= \left( \EE{\pollSsalt{i}} - \S{i} \right)^2 \\
+    &= \left( \Spoll{i} - \S{i} \right)^2 \\
+    &= \S{i}^2 \left( \frac{\Vxi{Q}}{\Var{\Qpoll}} - 1 \right)^2 \\
+    &= \frac{\S{i}^2}{\Neta^2} \frac{\EExisq{\Sigsqeta}}{\Vsq{\Qpoll}}
+\end{align}
+\begin{align}
+        \Var{\pollSsalt{i}} &= \frac{\Var{\alpha - \Spoll{i}\beta}}{\Vsq{\Qpoll}} \\
+        &= \frac{1}{\Vsq{\Qpoll}}\Var{\alpha} + \frac{\Vxisq{Q}}{\Var{\Qpoll}^4}\S{i}^2 \Var{\beta} - 2 \frac{\Vxi{Q}}{\Var{\Qpoll^3}} \S{i} \Cov{\alpha}{\beta}
+\end{align}
+Plugging in $\alpha$ and $\beta$ defined in Eq.~\eqref{m4eq:xmatrix} leads to the result in Eq.~\ref{m4eq:var-s-stan}.
+
+%
+%
+%
+%
+\subsection{Proof: Total-order Estimators}
+To analyze $\unpollTsalt{i}$ and $\pollTsalt{i}$, we follow the same process as for the first-order estimators above.
+We define random vector $X$ with mean $\mu_X$, variance $\Sigma_X$, and sample mean $\xavg = \Nxi^{-1} \sumv X_v$, where the statistics of the samples $X_v$ do not depend on $v$:
+\begin{align} \label{m4eq:t-xmatrix}
+    X &= \begin{bmatrix} \frac{1}{2} \left( \Qpoll(\bm{B_A^{(i)}}) - \Qpoll(\bm{B}) \right)^2 \\
+                        \frac{1}{2} \left( \Qpoll(\bm{A}) - \Qpoll(\bm{B}) \right)^2 \\
+                        \frac{1}{2\Neta} \left( \hatSigsqeta(\bm{A}) + \hatSigsqeta(\bm{B}) \right) \\
+                        \frac{1}{2\Neta} \left( \hatSigsqeta(\bm{B_A^i}) + \hatSigsqeta(\bm{B}) \right)
+        \end{bmatrix}
+        = \begin{bmatrix} \alpha \\ \beta \\ \gamma \\ \delta \end{bmatrix}, \\
+    \mu_X &= \begin{bmatrix} \VE{Q\mid\xi_i} \\ \Var{\Qpoll} \\ \EE{\Sigsqeta}/\Neta \\ \EE{\Sigsqeta}/\Neta \end{bmatrix} 
+        = \begin{bmatrix} \mu_\alpha \\ \mu_\beta \\ \mu_\gamma \\ \mu_\delta \end{bmatrix}, \\
+    \Sigma_X &= \begin{bmatrix}
+        \Var{\alpha} & \Cov{\alpha}{\beta} & \Cov{\alpha}{\gamma} & \Cov{\alpha}{\delta} \\ 
+        \Cov{\alpha}{\beta} & \Var{\beta} & \Cov{\beta}{\gamma} & \Cov{\beta}{\delta} \\
+        \Cov{\alpha}{\gamma} & \Cov{\beta}{\gamma} & \Var{\gamma} & \Cov{\gamma}{\delta} \\
+        \Cov{\alpha}{\delta} & \Cov{\beta}{\delta} & \Cov{\gamma}{\delta} & \Var{\delta}
+    \end{bmatrix} .
+\end{align}
+We define a function $g(a,b,c,d)$ and its gradient $\nabla g$,
+\begin{align}
+    g (a,b,c,d) &= \frac{a-d}{b - c} \\
+    \nabla g (a,b,c,d) &= \left[ \frac{1}{b-c}, \, \frac{-(a-d)}{(b-c)^2}, \, \frac{(a-d)}{(b-c)^2}, \, \frac{-1}{b-c} \right] ,
+\end{align}
+such that we can write $g(\mu_X) = \T{i}$ and $g(\xavg) = \unpollTsalt{i}$.
+%
+Therefore, we find that the estimator $\unpollTsalt{i}$ is unbiased regardless of stochastic solver sampling size $\Neta$, with variance that depends on both $\Nxi$ and $\Neta$,
+\begin{equation}
+    \Var{\unpollTsalt{i}} = \frac{\Var{\alpha - \delta - \T{i} \left( \beta - \gamma \right)}}{\Vxisq{Q}} .
+\end{equation}
+Plugging in $\alpha$, $\beta$, $\gamma$, and $\delta$ defined in Eq.~\eqref{m4eq:t-xmatrix} leads to the result in Eq.~\ref{m4eq:var-t-vd}.
+
+Analysis of standard estimator $\pollTsalt{i}$ follows by defining vector $Y = \left[ \alpha, \beta, 0, 0 \right]^T$ such that $g(\mu_Y) = \Tpoll{i}$ and $g(\yavg) = \pollTsalt{i}$. 
+%
+Therefore, we find that $\pollTsalt{i}$ is a biased estimator of $\T{i}$, where the magnitude of the bias depends on $\Neta$, with variance that depends on both $\Nxi$ and $\Neta$,
+\begin{align}
+    \bias{\pollTsalt{i}, \T{i}} &= \left( \EE{\pollTsalt{i}} - \T{i} \right)^2 \\
+    &= \left( \Tpoll{i} - \T{i} \right)^2 \\
+    &= \T{i}^2 \left( \frac{\Vxi{Q}\pollE{\ni}}{\Var{\Qpoll}\E{\ni}} - 1 \right)^2 \\
+    &= \frac{\T{i}^2}{\Neta^2} \frac{\EExisq{\Sigsqeta} \V{\ni}^2}{\Vsq{\Qpoll} \E{\ni}^2} ,
+\end{align}
+\begin{align}
+        \Var{\pollTsalt{i}} &= \frac{\Var{\alpha - \Tpoll{i}\beta}}{\Vsq{\Qpoll}} \\
+        &= \frac{1}{\Vsq{\Qpoll}}\Var{\alpha} + \frac{\Vxisq{Q} \pollE{\ni}^2 }{\Var{\Qpoll}^4 \E{\ni}^2}\T{i}^2 \Var{\beta} - 2 \frac{\Vxi{Q} \pollE{\ni}}{\Var{\Qpoll^3}\E{\ni}} \T{i} \Cov{\alpha}{\beta} .
+\end{align}
+Plugging in $\alpha$ and $\beta$ defined in Eq.~\eqref{m4eq:t-xmatrix} leads to the result in Eq.~\ref{m4eq:var-t-stan}.
+
+
