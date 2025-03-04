@@ -1,10 +1,10 @@
-In this section, we first analyze how the MC estimate $\Qpoll$ affects $\S{i}$ and $\T{i}$, \ie, the parametric sensitivity indices of $Q$.
+In this section, we first analyze how the MC estimate $\Qpoll$ affects the parametric sensitivity indices of $Q$ $\S{i}$ and $\T{i}$,.
 Then, we propose unbiased estimators for $\S{i}$ and $\T{i}$ using $\Qpoll$.
 
 \subsection{Stochastic solver's effect on sensitivity indices}
 We begin by considering the first- and total- order SIs of $\xii$ on $\Qpoll$,
 \begin{gather}\label{m2eq:si_poll}
-    \Spoll{i} = \frac{\VE{\Qpoll \mid \xii}}{\Var{\Qpoll}} , \\ \label{m2eq:ti_poll}
+    \Spoll{i} = \frac{\VE{\Qpoll \mid \xii}}{\Var{\Qpoll}} = , \\ \label{m2eq:ti_poll}
     \Tpoll{i} = \frac{\EV{\Qpoll \mid \xini}}{\Var{\Qpoll}} .
 \end{gather}
 From Eq.~\eqref{m2eq:deconv}, it follows that the numerator of Eq.~\eqref{m2eq:si_poll} can be expanded as
@@ -26,9 +26,14 @@ The first-order effect of $\bxi$ on $Q$ is the variance of $Q$ caused exclusivel
 As $\Qpoll$ is an unbiased estimator for $Q$, we would expect $\bxi$ to induce that same variance on $\Qpoll$. 
 The total-order effect of $\bxi$ on $Q$ is the variance of $Q$ caused by $\bxi$ and its interactions with all remaining variables $\sim \bxi$. 
 However, the total-order effect of $\bxi$ on $\Qpoll$ additionally includes the interactions of $\bxi$ with solver stochasticity $\eta$. 
-An equivalent result was found in~\cite{marrel-etal-2012} by extending the ANOVA decomposition directly to the set of input variables $\left( \xii, \xini, \eta \right)$. 
+An equivalent result was found in~\cite{marrel-etal-2012} by extending the ANOVA decomposition directly to the set of input variables $\left( \xii, \xini, \eta \right)$.
+% Write out ANOVA decomposition here? In short,
+% For a set of two variables, Q(\xi) = Q_0 + Q_1 + Q_2 + Q_{1,2}, while 
+% f(\xi,\eta) = f_0 + f_1 + f_2 + f_\eta + f_{1,2} + f_{1,\eta} + f_{2,\eta} + f_{1,2,\eta}. 
+% The first-order effects of \xi_1 -- Var[Q_1] and Var[f_1] -- are equivalent.
+% However, the total-order effects of \xi_1 are not: T_1(Q) = Var[Q_1] + Var[Q_{1,2}], while T_1(f) = Var[f_1] + Var[f_{1,2}] + Var[f_{1,\eta}] + Var[f_{1,2,\eta}].
 
-We can write the first- and total-order SIs of $\xii$ on $Q$ in terms of the first- and total-order effect SIs of $\xii$ on $\Qpoll$ and $\tempsymbol \defin \frac{\EExi{\Sigsqeta}}{\Vxi{Q}}$, the ratio of solver variance to parametric variance:
+We can write the first- and total-order SIs of $\xii$ on $Q$ in terms of the first- and total-order effect SIs of $\xii$ on $\Qpoll$ and the ratio of solver variance to parametric variance $\tempsymbol \defin \frac{\EExi{\Sigsqeta}}{\Vxi{Q}}$ as
 \begin{gather} \nonumber
     \Spoll{i} = \frac{\VEi{Q \mid \xii}}{\Vxi{Q} + \frac{1}{\Neta}\EExi{\Sigsqeta}} \\ \label{m2eq:si-sipoll}
     \rightarrow \S{i} = \Spoll{i} \left( 1 + \frac{\tempsymbol}{\Neta} \right) ,
@@ -50,31 +55,26 @@ Because we desire estimates of $\S{i}$ and $\T{i}$, we extend the variance decon
 \subsection{Unbiased sampling estimators using \texorpdfstring{$\Qpoll$}{Qpoll}}
 For unbiased estimates of $\S{i}$ and $\T{i}$ from $\Qpoll$, the denominator of $\Spoll{i}$ in Eq.~\eqref{m2eq:si-sipoll} and both the numerator and denominator of $\Tpoll{i}$ in Eq.~\eqref{m2eq:ti-tipoll} require a corrective term.
 It is possible that this varies from estimator-to-estimator; 
-in short, $\hatSigsqeta$ terms that require correction arise when $\Qpoll(\bxi)$ is squared, but not when two independent realizations of $\Qpoll$ are multiplied, as in $\Qpoll(\bm{B})_v \Qpoll(\bm{A_B^{(i)}})_v$. 
+in short, terms that require a $\hatSigsqeta$ correction arise when $\Qpoll(\bxi)$ is squared, but not when two independent realizations of $\Qpoll$ are multiplied, e.g., $\Qpoll(\bm{B})_v \Qpoll(\bm{A_B^{(i)}})_v$. 
 
-To consider the impact of introducing a corrective variance deconvolution term, we introduce two sets of estimators that use $\Qpoll$: ``standard'' estimators $\pollSsalt{i}$ and $\pollTsalt{i}$ that do not have corrective $\hatSigsqeta$ terms, and variance deconvolution estimators $\unpollSsalt{i}$ and $\unpollTsalt{i}$ that do.
+To understand the impact of introducing a corrective variance deconvolution term, we consider two sets of estimators that use $\Qpoll$ -- ``standard'' and variance deconvolution. The ``standard'' estimators $\pollSsalt{i}$ and $\pollTsalt{i}$ result from plugging $\Qpoll$ directly into the estimators in Eq.~\eqref{m2eq:si-sipoll} and Eq.~\eqref{m2eq:ti-tipoll}. The variance deconvolution estimators $\unpollSsalt{i}$ and $\unpollTsalt{i}$ result from introducing corrective $\hatSigsqeta$ terms to the standard estimators.
 
 The standard estimators arise from plugging $\Qpoll$ directly into the estimators in Section~\ref{subsec:saltelli-est},
-\begin{equation} \label{m2eq:saltelli-si-poll}
-    \pollSsalt{i} \defin \frac{\frac{1}{\Nxi} \sumv \Qpoll(\bm{B})_v \bigl[ \Qpoll(\bm{A_B^{(i)}})_v - \Qpoll(\bm{A})_v \bigr]}{\frac{1}{2\Nxi} \sumv \left( \Qpoll(\bm{A})_v - \Qpoll(\bm{B})_v \right)^2} \defin \frac{\pollVsalt{i}}{\varTotal{AB}},
-\end{equation}
-where $\meanQpoll{AB} = \frac{1}{2\Nxi} \sumv \bigl[ \Qpoll(\bm{A})_v + \Qpoll(\bm{B})_v \bigr] ,$ and 
-\begin{equation} \label{m2eq:saltelli-ti-poll}
-    \pollTsalt{i} \defin \frac{ \frac{1}{2\Nxi} \bigl[ \Qpoll(\bm{B_A^{(i)}})_v - \Qpoll(\bm{B})_v \bigr]^2}{\frac{1}{2\Nxi} \sumv \left( \Qpoll(\bm{A})_v - \Qpoll(\bm{B})_v \right)^2} \defin \frac{\pollEsalt{\ni}}{\varTotal{AB}}.
-\end{equation}
+\begin{gather} \label{m2eq:saltelli-si-poll}
+    \pollSsalt{i} \defin \frac{\frac{1}{\Nxi} \sumv \Qpoll(\bm{B})_v \bigl[ \Qpoll(\bm{A_B^{(i)}})_v - \Qpoll(\bm{A})_v \bigr]}{\frac{1}{2\Nxi} \sumv \left( \Qpoll(\bm{A})_v - \Qpoll(\bm{B})_v \right)^2} \defin \frac{\pollVsalt{i}}{\varTotal{AB}}, \\ \label{m2eq:saltelli-ti-poll}
+    \pollTsalt{i} \defin \frac{ \frac{1}{2\Nxi} \bigl[ \Qpoll(\bm{A_B^{(i)}})_v - \Qpoll(\bm{A})_v \bigr]^2}{\frac{1}{2\Nxi} \sumv \left( \Qpoll(\bm{A})_v - \Qpoll(\bm{B})_v \right)^2} \defin \frac{\pollEsalt{\ni}}{\varTotal{AB}}.
+\end{gather}
 The variance deconvolution estimators follow directly from Eqs.~\eqref{m2eq:si-sipoll} and~\eqref{m2eq:ti-tipoll},
 \begin{align}
     \S{i} \approx \unpollSsalt{i} &\defin \frac{\pollVsalt{i}}{\varTotal{AB} - \frac{1}{\Neta}\meanHatsigsqeta{AB}} \quad \text{and} \\
-    \T{i} \approx \unpollTsalt{i} &\defin \frac{\pollEsalt{\ni} -{\frac{1}{\Neta} \meanHatsigsqeta{B_A^i B}}}{\varTotal{AB} - \frac{1}{\Neta} \meanHatsigsqeta{AB}} ,
+    \T{i} \approx \unpollTsalt{i} &\defin \frac{\pollEsalt{\ni} -{\frac{1}{\Neta} \meanHatsigsqeta{A_B^i A}}}{\varTotal{AB} - \frac{1}{\Neta} \meanHatsigsqeta{AB}} ,
 \end{align}
 where 
 \begin{equation}
     \meanHatsigsqeta{AB} \defin \frac{1}{2\Nxi} \sumv \left[ \hatSigsqeta(\bm{A})_v + \hatSigsqeta(\bm{B})_v \right].
 \end{equation}
-The additional variance deconvolution terms are introduced to correct the noise introduction from the stochastic solver while preserving the behavior of the existing estimators. 
-For example, we estimate $\Var{Q}$ consistent with the sampling estimator for $\Vxi{Q}$ used in Eqs.~\eqref{m2eq:saltelli-si} and~\eqref{m2eq:saltelli-ti} rather than using a Bessel-corrected estimator as in Eq.~\eqref{m2eq:samp-var}.
-Other sampling estimators for $\Vxi{Q}$ have been introduced for use with $\S{i}$ and $\T{i}$, \eg in~\cite{saltelli-2002} and~\cite{saltelli-etal-2010}.
-Importantly, though $\T{i} \geq \S{i}$ in theory, the set of estimators $\Ssalt{i}$ and $\Tsalt{i}$ do not ensure this~\cite{azzini-etal-2021}; we would expect to see that same behavior with the variance deconvolution versions of these estimators.
+The additional variance deconvolution terms are introduced to correct the noise introduction from the stochastic solver while keeping consistent with the construction of the existing estimators; specifically, the numerator and denominator of $\unpollTsalt{i}$ require different average solver noise terms because $\pollEsalt{i}$ contains $\Qpoll(A_B^i)$ squared while $\varTotal{AB}$ contains $\Qpoll(A)$ squared.
+We would also expect the behavior of the variance deconvolution estimators to be consistent with that of the existing estimators; for example, this set of estimators $\Ssalt{i}$ and $\Tsalt{i}$ does not guarantee that $\Tsalt{i} \geq \Ssalt{i}$~\cite{azzini-etal-2021}; we would expect to see that same behavior with the variance deconvolution versions of these estimators.
 In the next section, we compare the statistical properties of the standard and variance-deconvolution estimators.
 
 \subsection{Mean-squared error of the estimators} 
@@ -83,7 +83,7 @@ The performance of an estimator $\hat{\theta}$ for true value $\theta$ is charac
     \mse{\hat{\theta}} &= \Var{\hat{\theta}} + \left(\EE{\hat{\theta}} - \theta \right) ^2 \\
     &= \Var{\hat{\theta}} + \bias{\hat{\theta}, \theta} .
 \end{align*}
-An \emph{unbiased} estimator will on average yield the true values of the Sobol' indices, and an estimator with small variance will on average yield values that remain close to the true values of the Sobol' indices~\cite{azzini-etal-2021}.
+An \emph{unbiased} estimator will on average yield the true values of the Sobol' indices, and an estimator with small variance will on average yield values that remain close to its average~\cite{azzini-etal-2021}.
 In~\ref{appx:mse}, we establish the variances and biases of the standard and variance-deconvolution estimators under the asymptotic normality assumption~\cite{vandervaart-2000, janon-etal-2014, azzini-etal-2021}.
 They are, respectively,
 \begin{align} \label{m4eq:bias-s-stan}
@@ -104,19 +104,20 @@ and,
     &\qquad \qquad \qquad \qquad \qquad \qquad + \S{i} \frac{1}{2\Neta} \left( \hatSigsqeta(A) + \hatSigsqeta(B) \right) \biggr]
 \end{split} \\ \label{m4eq:var-t-stan}
 \begin{split}
-    \Var{\pollTsalt{i}} &= \frac{1}{\Vsq{\Qpoll}} \V{} ar \biggl[\frac{1}{2} \left( \Qpoll(\bm{B_A^{(i)}}) - \Qpoll(\bm{B}) \right)^2 \\
+    \Var{\pollTsalt{i}} &= \frac{1}{\Vsq{\Qpoll}} \V{} ar \biggl[\frac{1}{2} \left( \Qpoll(\bm{A_B^{(i)}}) - \Qpoll(\bm{A}) \right)^2 \\
     &\qquad \qquad \qquad \qquad \quad - \T{i} \frac{\Vxi{Q} \pollE{\ni}}{2\Var{\Qpoll} \E{\ni}} \left( \Qpoll(\bm{A}) - \Qpoll(\bm{B}) \right)^2 \biggr] 
 \end{split} \\ \label{m4eq:var-t-vd}
 \begin{split}
-    \Var{\unpollTsalt{i}} &= \frac{1}{\Vxisq{Q}} \V{} ar \biggl[\frac{1}{2} \left( \Qpoll(\bm{B_A^{(i)}}) - \Qpoll(\bm{B}) \right)^2 - \frac{1}{2\Neta} \left( \hatSigsqeta(\bm{B_A^i}) + \hatSigsqeta(\bm{B}) \right) \\
+    \Var{\unpollTsalt{i}} &= \frac{1}{\Vxisq{Q}} \V{} ar \biggl[\frac{1}{2} \left( \Qpoll(\bm{A_B^{(i)}}) - \Qpoll(\bm{A}) \right)^2 - \frac{1}{2\Neta} \left( \hatSigsqeta(\bm{A_B^i}) + \hatSigsqeta(\bm{A}) \right) \\
     &\qquad \qquad \qquad \qquad \quad - \T{i} \left( \frac{1}{2} \left( \Qpoll(\bm{A}) - \Qpoll(\bm{B}) \right)^2 - \frac{1}{2\Neta} \left( \hatSigsqeta(\bm{A}) + \hatSigsqeta(\bm{B}) \right) \right) \biggr].
 \end{split}
 \end{align}
 
 When variance deconvolution is applied to $\Var{\Qpoll}$ to develop the unbiased estimator $\Vxi{Q} \approx S^2 = \genstsq - \frac{1}{\Neta}\genmeanhatsigsqeta$, the additive relationship gives rise to a simple bias term $\frac{1}{\Neta}\genmeanhatsigsqeta$ and relatively simple variance $\Var{S^2} = \Var{\genstsq} + \frac{1}{\Neta^2} \Var{\genmeanhatsigsqeta} - \frac{2}{\Neta} \Cov{\genstsq}{\genmeanhatsigsqeta}$~\cite{clements-etal-2024}.
-Because the SI estimators are ratios, the relationships between $\left(\S{i},\Spoll{i}\right)$ and $\left(\T{i},\Tpoll{i}\right)$ are not additive and their biases and variances are less straightforward to compare.
-The variance deconvolution estimators are unbiased; the biases of the standard estimators do not depend on $\Nxi$ but do depend on $\Neta$, the magnitude of the SIs, and the ratio of the solver noise to the total observed variance.
+Because the SI estimators are ratios, the relationships between $\left(\S{i},\Spoll{i}\right)$ and $\left(\T{i},\Tpoll{i}\right)$ are not simply additive and their variances are less straightforward to compare.
+The variance deconvolution estimators are unbiased; the biases of the standard estimators are functions of $\Neta$, the magnitude of the SIs, and the ratio of the solver noise to the total observed variance.
+Notably, the biases are larger for larger index values
 
 It is less obvious to draw comparisons between the variances of $\left(\unpollSsalt{i},\pollSsalt{i}\right)$ and $\left(\unpollTsalt{i},\pollTsalt{i}\right)$.
-We can qualitatively compare between the estimators for $\S{i}$ and those for $\T{i}$: because a correction term is necessary in both the numerator and denominator of $\T{i}$, its estimators' biases and variances are more complex than their $\S{i}$ counterparts. 
+We can qualitatively compare between the $\S{i}$ estimators and the $\T{i}$ estimators, in that because a correction term is necessary in both the numerator and denominator of $\T{i}$, its estimators' biases and variances are more complex than their $\S{i}$ counterparts. 
 We investigate the statistics of the estimators in the next section through numerical simulation.

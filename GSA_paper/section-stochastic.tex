@@ -3,17 +3,19 @@ In this section, we summarize the concept and notation of variance deconvolution
 For a detailed presentation of variance deconvolution, see~\cite{clements-etal-2024}. 
 
 We consider the same generic QoI defined in Section~\ref{sec:intro}, $Q = \Q, \bxi = \left( \xis \right) \in \Xi \subset \mathbb{R}^k$, with mean $\EExi{Q}$ and variance $\Vxi{Q}$.
-We now introduce an additional random variable $\eta$ to represent the inherent variability of the stochastic solver, and define our QoI $Q$ as the expectation over $\eta$ of a function $f(\bxi, \eta)$, $Q(\bxi) \defin \EEeta{f(\bxi,\eta)}$. 
+We additionally introduce a random variable $\eta$ to represent the inherent variability of the stochastic solver, and define our QoI $Q$ as the expectation over $\eta$ of a function $f(\bxi, \eta)$, $Q(\bxi) \defin \EEeta{f(\bxi,\eta)}$. 
 The function $f(\bxi, \eta)$ can be directly evaluated as the output from the stochastic solver with input $\bxi$, but the expectation $\EEeta{f(\bxi,\eta)}$ and variance $\Sigsqeta (\bxi) \defin \Veta{f(\bxi,\eta)}$ are not directly available.
-Instead, we approximate $Q(\bxi)$ as the sample mean of $\Neta$ independent evaluations of $f$, $Q\left(\bxi\right) \approx \frac{1}{\Neta}\sumeta f (\bxi, \etaj) \defin \Qpoll (\bxi)$.
-
+Instead, we approximate $Q(\bxi)$ and $\Sigsqeta(\xi)$ as the sample mean and variance of $f$ over $\Neta$ independent evaluations:
+\begin{equation*}
+    Q\left(\bxi\right) \approx \frac{1}{\Neta}\sumeta f (\bxi, \etaj) \defin \Qpoll (\bxi) \quad \text{and} \quad \Sigsqeta(\bxi) \approx \frac{1}{\Neta-1} \sumeta \left( f(\bxi, \etaj ) - \Qpoll(\bxi) \right)^2 \defin \hatSigsqeta (\bxi) .
+\end{equation*}
+In the context of MC RT, $\etaj$ corresponds to the internal stream of random numbers comprising a single particle history, $f(\bxi,\etaj)$ corresponds to the result (e.g., tally) of that single particle history, and $\Qpoll(\bxi)$ corresponds to the output of a MC RT simulation that used a total of $\Neta$ particle histories.
 In~\cite{clements-etal-2024}, we present that the total variance of $\Qpoll$ decomposes into the effect of the uncertain parameters and the effect of the stochastic solver, 
 \begin{equation} \label{m2eq:deconv}
     \Vxi{Q} = \Var{\Qpoll} - \frac{1}{\Neta}\EExi{\Sigsqeta},
 \end{equation}
 and propose an unbiased estimator for the parametric variance using MC estimators for $\Var{\Qpoll}$ and $\EExi{\Sigsqeta}$.
-Using the Saltelli method summarized in Section~\ref{sec:sampling}, variance deconvolution requires tallying the variance of the model output $\hatSigsqeta(\bm{A}) \defin \frac{1}{\Neta-1} \sumeta \left( f^2(\bxi, \etaj ) - \Qpoll^2(\bxi) \right)$ in addition to model output $\Qpoll(\bm{A})$.
-Then, to estimate $\Vxi{Q}$ using $\Nxi$ samples,
+To estimate the parametric variance $\Vxi{Q}$ using the $\Nxi$ samples of matrix $\bm{A}$ in Section~\ref{sec:sampling}, one would tally both the model output $\Qpoll(\bm{A})$ and the variance of the model output $\hatSigsqeta(\bm{A})$, then subtract the average solver variance from the total observed variance:
 \begin{gather} \label{m2eq:var-deconv}
     \Vxi{Q} \approx \varParam{A} \defin \varTotal{A} - \frac{1}{\Neta}\meanHatsigsqeta{A} ,\\ \label{m2eq:samp-var}
     \text{where } \varTotal{A} \defin \frac{1}{\Nxi - 1} \sumv \left( \Qpoll^2 (\bm{A})_v - \meanQpoll{A}^2 \right) , \\ \nonumber 

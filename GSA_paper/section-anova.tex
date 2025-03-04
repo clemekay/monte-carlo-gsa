@@ -11,12 +11,12 @@ Sobol' considered~\cite{sobol-1993} an expansion of $Q$ into $2^k$ orthogonal te
 \begin{equation} \label{m2eq:q_decomp}
     Q = Q_0 + \sum_i Q_i + \sum_i \sum_{j > i} Q_{ij} + \cdots + Q_{12 \ldots k} ,
 \end{equation}
-in which each term is a function only of the factors in its subscript, \ie, $Q_i = Q_i(\xii)$, $Q_{ij} = Q_{ij}(\xii, \xij)$.
+in which each term is a function only of the factors in its subscript, i.e., $Q_i = Q_i(\xii)$, $Q_{ij} = Q_{ij}(\xii, \xij)$.
 In particular, Sobol' considered the case in which each term could be defined recursively using the conditional expectations of $Q$,
 \begin{align}
     Q_0 &= \EExi{Q} \\
-    Q_i &= \EExini{Q \mid \xii} - \EExi{Q} \\
-    Q_{ij} &= \EExinij{Q \mid \xii, \xij} - Q_i - Q_j - \EExi{Q} ,
+    Q_i &= \EExini{Q \mid \xii} - Q_0 \\
+    Q_{ij} &= \EExinij{Q \mid \xii, \xij} - Q_i - Q_j - Q_0 ,
 \end{align}
 where $\EExini{Q \mid \xii}$ indicates the expected value of $Q$ conditional on some fixed value $\xii$ and $\EExinij{Q \mid \xii, \xij}$ indicates the expected value of $Q$ conditional on the pair of values $(\xii, \xij)$. 
 The variances of the terms in Eq.~\eqref{m2eq:q_decomp} give rise to the measures of importance being sought. 
@@ -36,13 +36,14 @@ The first-order sensitivity index of parameter $\xii$ is the ratio of its first-
     \S{i} = \frac{\VEi{Q \mid \xii}}{\Vxi{Q}} .
 \end{equation}
 The $k$ first-order SIs represent the main effect contributions of each input factor to the variance of the output.
-All first-order SIs are between 0 and 1 and $\sum_{i=1}^k \S{i} \leq 1$, with equality for purely additive models.
+All first-order SIs are between 0 and 1.
 Analogously to the higher-order variance terms in Eq.~\eqref{m2eq:v_decomp}, higher-order SIs represent the contribution only of the interactions amongst a set of variables. 
 Dividing Eq.~\eqref{m2eq:v_decomp} by $\Var{Q}$ results in the summation of all of the first- and higher-order SIs to 1:
 \begin{equation} \label{m2eq:s_decomp}
-    \sum_i \S{i} + \sum_i \sum_{j > i} \S{ij} + \cdots + \S{12 \ldots k} = 1.
+    \sum_i \S{i} + \sum_i \sum_{j > i} \S{ij} + \cdots + \S{12 \ldots k} = 1,
 \end{equation}
-In addition to its first-order SI, a parameter can be described by its total-order SI $\T{I}$, which accounts for its total contribution to the output variance by combining its first-order effect and all of its higher-order interaction effects.
+such that, by definition, $\sum_{i=1}^k \S{i} \leq 1$. 
+In addition to its first-order SI, a parameter can be described by its total-order SI $\T{i}$, which accounts for its total contribution to the output variance by combining its first-order effect and all of its higher-order interaction effects.
 For example, in a model with three parameters, the total effect of $\xi_1$ would be the sum of all of the terms in Eq.~\eqref{m2eq:s_decomp} that contain a 1: $\T{1} = \S{1} + \S{12} + \S{13} + \S{123}$. 
 The total-order SI of $\xii$ can also be expressed~\cite{homma-saltelli-1996, saltelli-2002} by conditioning on the set $\bxi_\ni$, which contains all factors except $\xii$, as
 \begin{equation} \label{m2eq:ti}

@@ -23,15 +23,11 @@
 
 
 
-\newcommand{\eg}{\textit{e.g.},~}
-\newcommand{\ie}{\textit{i.e.},~}
-
 % Existing definitions
 \newcommand{\defin}{\overset{\operatorname{def}}{=}}
 \newcommand{\Nxi}{ {N_\xi} }
 \newcommand{\Neta}{ {N_\eta} }
 \newcommand{\Qpoll}{\tilde{Q}_{\Neta}}
-\renewcommand{\tilde}{\widetilde}
 
 \newcommand{\Sigsqeta}{\sigma^2_\eta}
 \newcommand{\hatSigsqeta}{\hat{\sigma}^2_\eta}
@@ -81,9 +77,10 @@
 \newcommand{\Vpoll}[1]{\V{#1, \Qpoll}}
 
 % Saltelli estimators with Qpoll
-\newcommand{\pollSsalt}[1]{\hat{\mathbb{S}}_{#1, \Qpoll}}
-\newcommand{\pollTsalt}[1]{\hat{\mathbb{T}}_{#1, \Qpoll}}
-\newcommand{\pollVsalt}[1]{\hat{\mathbb{V}}_{#1, \Qpoll}}
+\newcommand{\pollSsalt}[1]{\hat{\mathbb{S}}_{#1}^{St.}}
+\newcommand{\pollTsalt}[1]{\hat{\mathbb{T}}_{#1}^{St.}}
+\newcommand{\pollVsalt}[1]{\hat{\mathbb{V}}_{#1}^{St.}}
+\newcommand{\pollEsalt}[1]{\hat{\mathbb{E}}_{#1}^{St.}}
 \newcommand{\varTotal}[1]{\tilde{S}^2_{\left( #1 \right)}}
 
 % Sample means
@@ -98,8 +95,8 @@
 
 % Sampling estimators with var deconv correction
 \newcommand{\varParam}[1]{S^2_{\left( #1 \right)}}
-\newcommand{\unpollSsalt}[1]{\hat{\mathbb{S}}_{#1, VD}}
-\newcommand{\unpollTsalt}[1]{\hat{\mathbb{T}}_{#1, VD}}
+\newcommand{\unpollSsalt}[1]{\hat{\mathbb{S}}_{#1}^{Va.}}
+\newcommand{\unpollTsalt}[1]{\hat{\mathbb{T}}_{#1}^{Va.}}
 
 % Misc.
 \renewcommand{\k}{k_{\text{eff}}}
@@ -184,5 +181,3 @@
 \newcommand{\EExisq}[1]{\mathbb{E}_\xi ^2 \left[#1\right]}
 %\newcommand{\Esq}[1]{\mathbb{E}^2\left[#1\right]}
 \newcommand{\Vsq}[1]{\mathbb{V}ar^2\left[#1\right]}
-
-\newcommand{\pollEsalt}[1]{\hat{\mathbb{E}}_{#1, \Qpoll}^S}

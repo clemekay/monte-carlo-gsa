@@ -1,12 +1,12 @@
-In this section, we illustrate the performance of the Saltelli SI estimators using stochastic QoIs with and without a variance deconvolution correction. 
-We first discuss results for a test case with an analytic solution and then test the method on a radiation transport example problem.
+In this section, we illustrate the performance of the standard and variance deconvolution Saltelli SI estimators. 
+We first discuss results for two common GSA numerical examples -- the Ishigami function and the Sobol' g-function.
+Then, we test the method on a Monte Carlo radiation transport problem.
 
 \subsection{Ishigami function}
 To test the accuracy of the derived estimators against analytic solutions, we add a stochastic parameter to the test function from Ishigami and Homma~\cite{ishigami-homma-1990}:
 \begin{gather} \label{m2eq:stoch-ishigami}
-    f \left( \xi_1, \xi_2, \xi_3, \eta \right) = \sin \left( \xi_1 \right) + a \sin^2 \left( \xi_2 \right) + b \xi_3^4 \sin \left( \xi_1 \right) + c\eta, \\
-    a=1, b=0.1, c=5, \nonumber \\
-    \eta \sim \mathcal{N} \left(0,1\right), \quad (\xi_1, \xi_2, \xi_3) \sim \mathcal{U} \left( -\pi,+\pi\right) , \nonumber
+    f \left( \xi_1, \xi_2, \xi_3, \eta \right) = \sin \left( \xi_1 \right) + 7 \sin^2 \left( \xi_2 \right) + 0.1 \xi_3^4 \sin \left( \xi_1 \right) + c\eta, \\
+    \eta \sim \mathcal{N} \left(0,1\right), \quad (\xi_1, \xi_2, \xi_3) \sim \mathcal{U} \left( -\pi,+\pi\right) , c = 5 \nonumber
 \end{gather}
 where $\xi_1$, $\xi_2$, and $\xi_3$ are independent input parameters and $\eta$ represents some intrinsic randomness. 
 Because we have defined $\eta$ with mean zero and variance 1, the expected value of $f$ is the expected value of the standard Ishigami function and the variance of $f$ is the variance of the standard Ishigami function plus a constant $c^2$. 
