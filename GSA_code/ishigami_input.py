@@ -21,7 +21,7 @@ def ishigami_single_repetition(n_xi, n_eta):
     for param_id in range(input_deck.k):
         AB = input_deck.matrix["A"].copy()
         AB[:, param_id] = input_deck.matrix["B"][:, param_id].copy()
-        qoi[param_id], sig_sq[param_id] = gsa.analytic_ishigami_function(AB)
+        qoi[param_id], sig_sq[param_id] = gsa.stochastic_ishigami_function(AB)
 
     results = {'fA': fA['qoi'], 'fB': fB['qoi'], 'fAB': qoi, 'sigsq_A': fA['sig_sq'], 'sigsq_B': fB['sig_sq'], 'sigsq_AB': sig_sq}
     # pass results into function that computes var, si, ti, vi, eni
