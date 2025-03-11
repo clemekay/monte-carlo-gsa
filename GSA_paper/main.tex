@@ -27,6 +27,8 @@
 %\documentclass[preprint,12pt]{elsarticle}
 \documentclass[final,3p,times,dvipsnames]{elsarticle}
 
+%% Use the option review to obtain double line spacing
+%% \documentclass[authoryear,preprint,review,12pt]{elsarticle}
 
 %% Use the options 1p,twocolumn; 3p; 3p,twocolumn; 5p; or 5p,twocolumn
 %% for a journal layout:
@@ -45,6 +47,12 @@
 \usepackage{amssymb}
 %% The amsthm package provides extended theorem environments
 \usepackage{amsthm}
+
+%% The lineno packages adds line numbers. Start line numbering with
+%% \begin{linenumbers}, end it with \end{linenumbers}. Or switch it on
+%% for the whole article with \linenumbers.
+%% \usepackage{lineno}
+
 %% Our added packages
 \usepackage{personal}
 
@@ -147,72 +155,68 @@ Stochastic simulators, on the hand, have an intrinsic randomness and produce dif
 This introduces additional variability to model output, complicating the use of traditional methods for computing Sobol' indices. 
 In this paper, we focus on computing Sobol' indices that are unbiased by solver noise without needing to over-resolve each evaluation of the stochastic simulator.
 We propose doing so using variance deconvolution, in which we explicitly calculate the variance due to the solver and remove it from the total observed variance.
-The proposed method is applied to two examples: the Ishigami function that is commonly used as a test case for Sobol' indices and a neutron-transport case study.
+The proposed method is applied to two examples -- the Ishigami function that is commonly used as a test case for Sobol' indices and a neutron-transport case study.
 The results confirm the convergence of the approach and highlight the approach's utility particularly when the indices are not near-zero and when there is a large amount of solver noise.
+
 \end{abstract}
-
-
 %%Research highlights
 \begin{highlights}
 \item An approach is developed for global sensitivity analysis using stochastic computational solvers.
 \item Variance deconvolution, in which solver variance is explicitly calculated and removed from the total observed variance, is briefly reviewed.
-\item Variance deconvolution (var-d) is combined with existing methods for Sobol' indices.
-\item Var-d Sobol' indices are shown to converge to the true solution for an analytic test case.
+\item Variance deconvolution is combined with existing methods for Sobol' indices.
+\item Statistical properties of the variance deconvolution estimator are compared with those of the standard approach both analytically and with numerical exploration.
+\item For the Ishigami problem, indices using variance deconvolution converge to the known solution for a lower computational cost than the standard approach.
 \item Monte Carlo radiation transport is used for an additional numerical example.
 \end{highlights}
 
-
 \begin{keyword}
 global sensitivity analysis \sep Monte Carlo radiation transport \sep stochastic solvers \sep sobol indices
+%% keywords here, in the form: keyword \sep keyword
+
+%% PACS codes here, in the form: \PACS code \sep code
+
+%% MSC codes here, in the form: \MSC code \sep code
+%% or \MSC[2008] code \sep code (2000 is the default)
+
 \end{keyword}
 
-
 \end{frontmatter}
-
 
 \section{Introduction}
 \label{sec:intro}
 \input{section-intro.tex}
 
-
 \section{Background and theory on ANOVA}
 \label{sec:anova}
 \input{section-anova.tex}
-
 
 \section{Sampling-based estimators for sensitivity indices}
 \label{sec:sampling}
 \input{section-sampling.tex}
 
-
 \section{Introduction to variance deconvolution}
 \label{sec:deconvolution}
 \input{section-stochastic.tex}
-
 
 \section{GSA with variance deconvolution}
 \label{sec:gsa-deconvolution}
 \input{section-stochastic-gsa.tex}
 
-
 \section{Numerical results}
 \label{sec:results}
 \input{section-results.tex}
-
 
 \section{Conclusion}
 \label{sec:conclusion}
 \input{section-conclusions.tex}
 
 \appendix
-\section{Mean-squared error from asymptotic limits}
+\section{Mean-squared error from asymptotic normality}
 \label{appx:mse}
 \input{section-appx-mse.tex}
 
-
 \bibliographystyle{elsarticle-num}
 \bibliography{biblio}
-
 
 \end{document}
 \endinput

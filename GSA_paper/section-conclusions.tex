@@ -2,5 +2,9 @@ In this paper, we extend the variance deconvolution framework introduced in~\cit
 Sobol' indices are well-suited and widely used for GSA, and there has been abundant work over the past few decades on the most efficient sampling schemes and estimators for SIs. 
 In this work, we analyze the effect on SIs when the underlying solver is stochastic, i.e., has some underlying inherent variability (e.g., Monte Carlo radiation transport solvers).
 We build on a previously-developed variance deconvolution estimator which, rather than computing parametric variance by over-resolving the stochastic solver, explicitly quantifies and removes the solver variance from the total observed variance.
-We show in closed-form that in general, using a stochastic solver will always under-estimate the true first-order SIs and over-estimate the true total-order SIs. 
-We find that though the variance-deconvolution version of existing SI estimators has a higher variance than its standard counterpart, the variance deconvolution version is consistently more accurate than the standard version.
+We show in closed-form that in general, a stochastic solver will introduce a bias to under-estimate the parametric first-order SIs and over-estimate the parametric total-order SIs. 
+We find that though the variance deconvolution version of existing SI estimators can have a higher variance than its standard counterpart, the variance deconvolution version is able to accurately compute the indices for a reduced cost.
+When the solver noise contribution was approximately equal to the parameter noise, the variance deconvolution estimator saved 50X computational cost compared to the standard.
+When the solver noise was approximately double the parameter noise, the variance deconvolution estimator saved a 250X computational cost.
+
+

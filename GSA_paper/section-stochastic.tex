@@ -11,13 +11,13 @@ Instead, we approximate $Q(\bxi)$ and $\Sigsqeta(\xi)$ as the sample mean and va
 \end{equation*}
 In the context of MC RT, $\etaj$ corresponds to the internal stream of random numbers comprising a single particle history, $f(\bxi,\etaj)$ corresponds to the result (e.g., tally) of that single particle history, and $\Qpoll(\bxi)$ corresponds to the output of a MC RT simulation that used a total of $\Neta$ particle histories.
 In~\cite{clements-etal-2024}, we present that the total variance of $\Qpoll$ decomposes into the effect of the uncertain parameters and the effect of the stochastic solver, 
-\begin{equation} \label{m2eq:deconv}
+\begin{equation} \label{eq:deconv}
     \Vxi{Q} = \Var{\Qpoll} - \frac{1}{\Neta}\EExi{\Sigsqeta},
 \end{equation}
 and propose an unbiased estimator for the parametric variance using MC estimators for $\Var{\Qpoll}$ and $\EExi{\Sigsqeta}$.
 To estimate the parametric variance $\Vxi{Q}$ using the $\Nxi$ samples of matrix $\bm{A}$ in Section~\ref{sec:sampling}, one would tally both the model output $\Qpoll(\bm{A})$ and the variance of the model output $\hatSigsqeta(\bm{A})$, then subtract the average solver variance from the total observed variance:
-\begin{gather} \label{m2eq:var-deconv}
-    \Vxi{Q} \approx \varParam{A} \defin \varTotal{A} - \frac{1}{\Neta}\meanHatsigsqeta{A} ,\\ \label{m2eq:samp-var}
+\begin{gather} \label{eq:var-deconv}
+    \Vxi{Q} \approx \varParam{A} \defin \varTotal{A} - \frac{1}{\Neta}\meanHatsigsqeta{A} ,\\ \label{eq:samp-var}
     \text{where } \varTotal{A} \defin \frac{1}{\Nxi - 1} \sumv \left( \Qpoll^2 (\bm{A})_v - \meanQpoll{A}^2 \right) , \\ \nonumber 
     \meanQpoll{A} = \frac{1}{\Nxi} \sumv \Qpoll(\bm{A})_v \quad \text{and} \quad \meanHatsigsqeta{A} = \frac{1}{\Nxi} \sumv \hatSigsqeta(\bm{A}) .
 \end{gather}
