@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import gsa
 
-def ishigami_single_repetition(n_xi, n_eta):
+def ishigami_single_repetition(n_xi, n_eta, c=5):
     """Calculate indices using stochastic ishigami function
     [0] is standard, [1] is vard
     vi shape is [k, 2, dshape]
@@ -11,9 +11,9 @@ def ishigami_single_repetition(n_xi, n_eta):
     gsa.settings(n_xi=n_xi, n_eta=n_eta)
     input_deck = gsa.generate_samples(returnDeck=True)
 
-    qoi, sig_sq = gsa.stochastic_ishigami_function(input_deck.matrix["A"])
+    qoi, sig_sq = gsa.stochastic_ishigami_function(input_deck.matrix["A"], c=c)
     fA = {'qoi': qoi, 'sig_sq': sig_sq}
-    qoi, sig_sq = gsa.stochastic_ishigami_function(input_deck.matrix["B"])
+    qoi, sig_sq = gsa.stochastic_ishigami_function(input_deck.matrix["B"], c=c)
     fB = {'qoi': qoi, 'sig_sq': sig_sq}
     datashape = (3,) + qoi.shape
     qoi = np.zeros(datashape)
@@ -21,7 +21,7 @@ def ishigami_single_repetition(n_xi, n_eta):
     for param_id in range(input_deck.k):
         AB = input_deck.matrix["A"].copy()
         AB[:, param_id] = input_deck.matrix["B"][:, param_id].copy()
-        qoi[param_id], sig_sq[param_id] = gsa.stochastic_ishigami_function(AB)
+        qoi[param_id], sig_sq[param_id] = gsa.stochastic_ishigami_function(AB, c=c)
 
     results = {'fA': fA['qoi'], 'fB': fB['qoi'], 'fAB': qoi, 'sigsq_A': fA['sig_sq'], 'sigsq_B': fB['sig_sq'], 'sigsq_AB': sig_sq}
     # pass results into function that computes var, si, ti, vi, eni
@@ -34,7 +34,7 @@ def ishigami_single_repetition(n_xi, n_eta):
 
 def draw_box(data, offset, edge_color, ax, fill_color="white"):
     pos = np.arange(data.shape[1])+offset+1
-    bplot = ax.boxplot(data, positions= pos, widths=0.3, patch_artist=True)
+    bplot = ax.boxplot(data, positions=pos, widths=0.3, patch_artist=True, showmeans=True, meanline=True)
     for element in ['boxes', 'medians']:
         for item in bplot[element]:
             item.set(color=edge_color, linewidth=2)
@@ -72,14 +72,14 @@ def boxplot_repetition_data(analytic, data, n_eta, n_xi, n_reps, ylabel, ylim, f
         plt.savefig(figname)
 
 
-def run_ishigami_example(n_eta, n_xi, n_reps):
+def run_ishigami_example(n_eta, n_xi, n_reps, c=5):
     qoi = np.zeros(n_reps)
     var = np.zeros((n_reps, 2))
     vi = np.zeros((n_reps, 3, 2))
     eni = vi.copy(); si = vi.copy(); ti = vi.copy()
 
     for rep in range(n_reps):
-        var[rep], vi[rep], eni[rep], si[rep], ti[rep], qoi[rep] = ishigami_single_repetition(n_xi, n_eta)
+        var[rep], vi[rep], eni[rep], si[rep], ti[rep], qoi[rep] = ishigami_single_repetition(n_xi, n_eta, c=c)
 
     return var, vi, eni, si, ti, qoi
 
@@ -102,15 +102,20 @@ def boxplot_si(n_eta, n_xi, n_reps, si, savefig=False):
                             ylabel="First-order Sobol' index", ylim=[-0.5,1], figname=name)
 
 
-def run_and_plot_ti(n_eta, n_xi, n_reps, savefig=False):
-    var, vi, eni, si, ti, qoi = run_ishigami_example(n_eta, n_xi, n_reps)
+def run_and_plot_ti(n_eta, n_xi, n_reps, savefig=False, c=5):
+    var, vi, eni, si, ti, qoi = run_ishigami_example(n_eta, n_xi, n_reps, c=c)
     boxplot_ti(n_eta, n_xi, n_reps, ti, savefig)
 
 
-def run_and_plot_indices(n_eta, n_xi, n_reps, savefig=False):
-    var, vi, eni, si, ti, qoi = run_ishigami_example(n_eta, n_xi, n_reps)
+def run_and_plot_indices(n_eta, n_xi, n_reps, savefig=False, ifprint=False, c=5):
+    var, vi, eni, si, ti, qoi = run_ishigami_example(n_eta, n_xi, n_reps, c=c)
     boxplot_si(n_eta, n_xi, n_reps, si, savefig)
     boxplot_ti(n_eta, n_xi, n_reps, ti, savefig)
+    if ifprint:
+        print(np.mean(si, axis=0))
+        print(np.median(si, axis=0))
+        print(np.mean(ti, axis=0))
+        print(np.median(ti, axis=0))
 
 # Instantiate gsa input_deck in gsa.functions
 k=3
@@ -122,14 +127,14 @@ a_var, a_vi, a_eni, a_si, a_ti, a_qoi = gsa.analytic_ishigami_indices()
 
 
 # Run repetitions of ishigami function and generate boxplot of results
-eta =  [5, 50]
-xi =  [100, 1000]
+eta =  [200]
+xi =  [100]
 reps = [100, 1000]
 
 for bing in eta:
     for bong in xi:
         for borp in reps:
-            run_and_plot_indices(n_eta=bing, n_xi=bong, n_reps=borp, savefig=True)
+            run_and_plot_indices(n_eta=bing, n_xi=bong, n_reps=borp, savefig=False, ifprint=True)
 
 
 
